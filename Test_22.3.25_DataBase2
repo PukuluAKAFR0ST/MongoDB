@@ -1,0 +1,58 @@
+db.products.insertMany([
+    { "_id" : 1, "name" : "xPhone", "price" : 799, "releaseDate": ISODate("2011-05-14"), "spec" : { "ram" : 4, "screen" : 6.5, "cpu" : 2.66 },"color":["white","black"],"storage":[64,128,256]},
+    { "_id" : 2, "name" : "xTablet", "price" : 899, "releaseDate": ISODate("2011-09-01") , "spec" : { "ram" : 16, "screen" : 9.5, "cpu" : 3.66 },"color":["white","black","purple"],"storage":[128,256,512]},
+    { "_id" : 3, "name" : "SmartTablet", "price" : 899, "releaseDate": ISODate("2015-01-14"), "spec" : { "ram" : 12, "screen" : 9.7, "cpu" : 3.66 },"color":["blue"],"storage":[16,64,128]},
+    { "_id" : 4, "name" : "SmartPad", "price" : 699, "releaseDate": ISODate("2020-05-14"),"spec" : { "ram" : 8, "screen" : 9.7, "cpu" : 1.66 },"color":["white","orange","gold","gray"],"storage":[128,256,1024]},
+    { "_id" : 5, "name" : "SmartPhone", "price" : 599,"releaseDate": ISODate("2022-09-14"), "spec" : { "ram" : 4, "screen" : 9.7, "cpu" : 1.66 },"color":["white","orange","gold","gray"],"storage":[128,256]}
+ ])
+
+q1. db.products.find({ color: "white" })
+
+q2. db.products.updateOne(
+    { name: "xTablet" }, 
+    { $set: { "spec.ram": 24 } }
+)
+
+q3. db.products.find({}, { spec: 1, _id: 0 })
+
+q4. db.products.find().sort({ price: -1 })
+
+q5. db.products.find().skip(1).limit(2)
+
+q6. db.products.find({ 
+    name: { $regex: "^S", $options: "i" }, 
+    price: { $gt: 700 } 
+})
+
+q7. db.products.aggregate([
+    {
+        $group: {
+            _id: null,
+            totalPrice: { $sum: "$price" }
+        }
+    }
+])
+
+q8. db.products.find({}, { size: 1, _id: 0 })
+
+q9. db.sales.aggregate([
+    { $match: { size: "Tall" } },  // Filter documents where size is "Tall"
+    { 
+        $group: {
+            _id: "$item",          // Group by item name
+            totalQuantity: { $sum: "$quantity" } // Optional: Summing total quantity per item
+        }
+    }
+])
+
+q10. db.products.find().sort({ price: 1 }).skip(1).limit(1)
+
+q11. db.sales.aggregate([
+    { 
+        $group: {
+            _id: "$item",                     // Group by item name
+            totalQuantity: { $sum: "$quantity" }, // Sum of all quantities
+            avgPrice: { $avg: "$price" }      // Average price of the item
+        }
+    }
+])
